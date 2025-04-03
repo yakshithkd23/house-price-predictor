@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>House Price Predictor</h2>
+        <form id="predict-form">
+            <label>Longitude: <input type="number" step="any" name="longitude" required></label>
+            <label>Latitude: <input type="number" step="any" name="latitude" required></label>
+            <label>Housing Median Age: <input type="number" name="housing_median_age" required></label>
+            <label>Total Rooms: <input type="number" name="total_rooms" required></label>
+            <label>Total Bedrooms: <input type="number" name="total_bedrooms" required></label>
+            <label>Population: <input type="number" name="population" required></label>
+            <label>Households: <input type="number" name="households" required></label>
+            <label>Median Income: <input type="number" step="any" name="median_income" required></label>
+            <button type="submit">Predict Price</button>
+        </form>
+        <h3 id="result"></h3>
+    </div>
+    <script>
+        document.getElementById('predict-form').onsubmit = async function(event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            let response = await fetch('/predict/', {
+                method: 'POST',
+                body: formData
+            });
+            let data = await response.json();
+            document.getElementById('result').innerText = data.predicted_price ? 
+                "Predicted Price: $" + data.predicted_price + "k" : "Error: " + data.error;
+        };
+    </script>
+</body>
+</html>
